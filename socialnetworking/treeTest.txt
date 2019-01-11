@@ -1,0 +1,40 @@
+Name: John Rich
+Gender: M
+Address: Triana 188 Huntsville 35806 AL
+GPA: 3.54
+DOB: 9/10/1996
+Following: Alex Kent 
+Followers: George Mars Alex Kent 
+
+Name: Alice Rice
+Gender: F
+Address: Hughes 76 Nashville 42163 TN
+GPA: 3.65
+DOB: 8/5/1998
+Following: Alex Kent 
+Followers: Alex Kent 
+
+Name: Brent Staples
+Gender: M
+Address: Wood 58 CapeElizabeth 4107 ME
+GPA: 3.62
+DOB: 12/3/1994
+Following: 
+Followers: Alex Kent George Mars 
+
+Name: Alex Kent
+Gender: M
+Address: Avery 120 Huntsville 35806 AL
+GPA: 3.76
+DOB: 3/12/1993
+Following: Brent Staples Alice Rice John Rich 
+Followers: John Rich Alice Rice 
+
+Name: George Mars
+Gender: M
+Address: Jefferson 201 Huntsville 35806 AL
+GPA: 3.1
+DOB: 4/15/1993
+Following: Brent Staples John Rich 
+Followers: 
+

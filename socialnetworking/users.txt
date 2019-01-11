@@ -1,0 +1,26 @@
+John Rich 
+M 
+Triana 188 Huntsville 35806 AL 
+3.54 
+9 10 1996 
+Alice Rice 
+F 
+Hughes 76 Nashville 42163 TN 
+3.65 
+8 5 1998
+Brent Staples
+M
+Wood 58 CapeElizabeth 04107 ME
+3.62
+12 3 1994
+Alex Kent
+M 
+Avery 120 Huntsville 35806 AL 
+3.76
+3 12 1993 
+George Mars
+M 
+Jefferson 201 Huntsville 35806 AL 
+3.10 
+4 15 1993 
+
