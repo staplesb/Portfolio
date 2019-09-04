@@ -1,7 +1,7 @@
 Classes are as follows:
 -AStar.java used the psuedo code of the algorithm to process connections and determine the path.
 -Connection.java acts a simple connection data structure.
--Graph.java holds all of the connections and is  the graph of the nodes. 
+-Graph.java holds all of the connections and is the graph of the nodes. 
 -Heuristic.java contains the function to determine an estimated distance from a node to the goal.
 -Node.java is a simple data structure for a single node, including an identifier, position, and name
 -NodeRecord.java is the data structure used by AStar to hold costs and determine the path
