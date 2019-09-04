@@ -1,5 +1,5 @@
 Classes are as follows:
--AStar.java uses the psuedo code in the book to process connections and determine the path.
+-AStar.java used the psuedo code of the algorithm to process connections and determine the path.
 -Connection.java acts a simple connection data structure.
 -Graph.java holds all of the connections and is  the graph of the nodes. 
 -Heuristic.java contains the function to determine an estimated distance from a node to the goal.
