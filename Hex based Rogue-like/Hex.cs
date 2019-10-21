@@ -21,19 +21,18 @@ public class Hex : MonoBehaviour
     // Update is called once per frame
     private void Update()
     { 
+        //If a hex is right clicked and an enemy occupies the hex, the player attacks the enemy
         if (Input.GetMouseButtonUp(1))
         {
-
             if (Vector2.Distance(gameObject.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)) < gameObject.transform.localScale.x / 2.2)
             {
                 if (enemyUnit != null)
                     controller.GetComponent<GameController>().attackEnemy(gameObject);
             }
-
         }
-
     }
 
+    //Sets the adjacency list for this hex
     public void setAdjacency()
     {
         adjacentHexes = new List<GameObject>();
@@ -54,42 +53,50 @@ public class Hex : MonoBehaviour
             }
         }
     }
-
+    
+    //Returns the adjacency list for this hex
     public List<GameObject> getAdjacent()
     {
         return adjacentHexes;
     }
-
+    
+    //Sets the player unit for this hex
     public void setPlayerUnit(GameObject playerUnit)
     {
         this.playerUnit = playerUnit;
     }
-
+    
+    //Returns the player unit for this hex
     public GameObject getPlayerUnit()
     {
         return playerUnit;
     }
 
+    //Sets the enemy unit for this hex
     public void setEnemyUnit(GameObject enemyUnit)
     {
         this.enemyUnit = enemyUnit;
     }
-
+    
+    //Returns the enemy unit for this hex
     public GameObject getEnemyUnit()
     {
         return enemyUnit;
     }
-
+    
+    //Sets the sprite for this hex, for different terrain appearances
     public void setSprite(Sprite sprite)
     {
         gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
+    //Sets the game controller
     public void setController(GameObject controller)
     {
         this.controller = controller;
     }
-
+    
+    //Returns true if an enemy unit can be places on this hex
     public bool canPlaceUnit()
     {
         if (playerUnit != null)
@@ -102,7 +109,8 @@ public class Hex : MonoBehaviour
             return false;
         return true;
     }
-
+    
+    //Returns true if an enemy unit can move to this hex
     public bool canMoveTo()
     {
         if (enemyUnit != null)
@@ -115,7 +123,8 @@ public class Hex : MonoBehaviour
             return false;
         return true;
     }
-
+    
+    //If left mouse is clicked, call game controller to try and move the player
     private void OnMouseDown()
     {
         controller.GetComponent<GameController>().movePlayer(gameObject);
