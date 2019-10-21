@@ -20,12 +20,14 @@ public class enemyMovement : MonoBehaviour
             gameObject.GetComponent<Rigidbody2D>().position = gameObject.GetComponent<enemyCharacter>().currentHex.transform.position;
     }
 
+    //Called to move this enemy
     public void move()
     {
         moving = true;
         StartCoroutine(findDestinationHex());
     }
-
+    
+    //Coroutine to find a potential hex to move to and orient the enemy
     private IEnumerator findDestinationHex()
     {
         List<GameObject> adjacentHexes;
@@ -61,7 +63,8 @@ public class enemyMovement : MonoBehaviour
         
         yield return null;
     }
-
+    
+    //Orients the enemy towards the destination and starts a coroutine to move the enemy
     public void orientCharacter(GameObject destination)
     {
         float time = 0.5f;
@@ -113,13 +116,15 @@ public class enemyMovement : MonoBehaviour
         StartCoroutine(moveToDestination(destination, time));
 
     }
-
+    
+    //Coroutine to move the enemy to a destination in a given amount of time. 
     private IEnumerator moveToDestination(GameObject destination, float time)
     {
         float lerpTime = 0.0f;
         Vector3 startPos = gameObject.transform.position;
         Vector3 adjustedDestination = destination.transform.position;
-
+        
+        //Adjusts the player and enemy to different positions if the occupy the same hex.
         if (destination.GetComponent<Hex>().getPlayerUnit() != null)
         {
             if (adjustedDestination.x > gameObject.transform.position.x)
@@ -144,7 +149,8 @@ public class enemyMovement : MonoBehaviour
         gameObject.GetComponent<enemyCharacter>().setCurrentHex(destination);
 
         gameObject.transform.localScale = new Vector3(1, 1, 1);
-
+        
+        //This moves the enemy stat sheet with them
         foreach (Transform child in gameObject.transform)
         {
             if (child.gameObject.name == "EnemyCanvas")
@@ -154,10 +160,13 @@ public class enemyMovement : MonoBehaviour
         }
         gameObject.GetComponent<Animator>().SetTrigger("Idle");
 
+        //If the destination is occupied by the player, then set the enemy to attack once it arrives
         if (destination.transform.position != adjustedDestination)
         {
             gameObject.GetComponent<enemyAttack>().attackCurrentHex();
-        } else if (gameObject.GetComponent<enemyAttack>().canAttackPlayer())
+        } 
+        //The destination is in range of the player, then launch a ranged attack
+        else if (gameObject.GetComponent<enemyAttack>().canAttackPlayer())
             gameObject.GetComponent<enemyAttack>().attack();
         moving = false;
         yield return null;
