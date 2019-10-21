@@ -18,7 +18,6 @@ public class PlaceHexes : MonoBehaviour
     private void Awake()
     {
         instMap();
-
     }
 
     private void Start()
@@ -26,6 +25,7 @@ public class PlaceHexes : MonoBehaviour
 
     }
 
+    //Create a new map
     private void instMap()
     {
         print("created map");
@@ -35,9 +35,9 @@ public class PlaceHexes : MonoBehaviour
         generateHexes();
         createGroups();
         attachSprites();
+        //For each hex on the map, set their adjacency list. Also set enter and exit portals. 
         foreach (Transform child in gameObject.transform)
         {
-
             child.gameObject.GetComponent<Hex>().setAdjacency();
             if (child.position == portalStart)
             {
@@ -56,7 +56,8 @@ public class PlaceHexes : MonoBehaviour
     {
         
     }
-
+    
+    //Create the positions for each hex; based on a desired width and height
     private void generatePosition(int width, int height)
     {
         double y = 0;
@@ -77,7 +78,8 @@ public class PlaceHexes : MonoBehaviour
         portalStart = positions[Mathf.CeilToInt(width / 2)];
         portalEnd = positions[positions.Count - Mathf.CeilToInt(width / 2)-1];
     }
-
+    
+    //Create the hexes on the map for each position
     private void generateHexes()
     {
         foreach (Vector3 position in positions)
@@ -87,11 +89,14 @@ public class PlaceHexes : MonoBehaviour
         }
     }
 
+    //Create groups of hexes; these will be different terrain groups
     private void createGroups()
     {
         GameObject tempHex;
         List<GameObject> visitedHexes = new List<GameObject>();
         List<GameObject> group = new List<GameObject>();
+        //Make a group to contain 3-6 hexes. Add random adjacent hexes to the group. If the hex has already been used, skip it. 
+        //If a group is full, add it to our list of groups and make a new group. 
         foreach (Transform child in gameObject.transform)
         {
             tempHex = child.gameObject;
@@ -99,7 +104,6 @@ public class PlaceHexes : MonoBehaviour
                 continue;
             if (group.Count == 0)
             {
-                
                 group = new List<GameObject>();
                 group.Capacity = Random.Range(3, 6);
                 group.Add(tempHex);
@@ -138,6 +142,7 @@ public class PlaceHexes : MonoBehaviour
         }
     }
 
+    //Attach sprites to groups of hexes to create different biomes
     private void attachSprites()
     {
         Sprite currentSprite;
@@ -148,19 +153,18 @@ public class PlaceHexes : MonoBehaviour
             if (r < .15)
             {
                 currentSprite = sprites[3];//water
-
-                
             }
             else if (r < .3)
-                currentSprite = sprites[2];
+                currentSprite = sprites[2];//mountain
             else if (r < .55)
-                currentSprite = sprites[1];
+                currentSprite = sprites[1];//desert
             else
-                currentSprite = sprites[0];
+                currentSprite = sprites[0];//grass
             
             foreach(GameObject hex in group)
             {
                 hex.GetComponent<SpriteRenderer>().sprite = currentSprite;
+                //If the group is water, then load the water animation
                 if (currentSprite.Equals(sprites[3]))
                 {
                     hex.GetComponent<Animator>().runtimeAnimatorController = Resources.Load("Animation/HexAnimator") as RuntimeAnimatorController;
@@ -169,7 +173,7 @@ public class PlaceHexes : MonoBehaviour
 
             }
         }
-
+        //Attach sprites and animation for start and end portals
         foreach(Transform child in gameObject.transform)
         {
             if(child.position == portalStart)
@@ -191,6 +195,7 @@ public class PlaceHexes : MonoBehaviour
 
     }
 
+    //Set the controller for each hex
     public void setHexController(GameObject controller)
     {
         foreach(Transform child in gameObject.transform)
@@ -198,19 +203,23 @@ public class PlaceHexes : MonoBehaviour
             child.gameObject.GetComponent<Hex>().setController(controller);
         }
     }
-
+    
+    //Return the enter portal
     public GameObject getEnterPortal(){
         return enterPortal;
     }
-
+    
+    //Return the exit portal
     public GameObject getExitPortal()
     {
         return exitPortal;
     }
 
+    //A rather rough attempt at pathfinding from the start to exit portal. The way the adjacency list is created isn't ideal.
+    //It doesn't follow the same order always, so this makes it hard to create a good algorithm for pathfinding.
+    //Although this method works a majority of the time, through brute force. This needs to be fixed.
     public bool searchForPath()
     {
-        //GameObject currentHex = gameObject.GetComponent<PlaceHexes>().getEnterPortal();
         List<GameObject> visitedHexes = new List<GameObject>();
         List<GameObject> open = new List<GameObject>();
         open.Add(gameObject.GetComponent<PlaceHexes>().getEnterPortal());
