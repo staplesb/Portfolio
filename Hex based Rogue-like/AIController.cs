@@ -15,6 +15,7 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
+        //If a enemies dies, it is set to inactive. This cleans up inactive enemies.
         foreach(Transform child in gameObject.transform)
         {
             if (!child.gameObject.activeSelf)
@@ -24,6 +25,7 @@ public class AIController : MonoBehaviour
         }
     }
 
+    //Move all enemies for their turn
     public void enemyTurn()
     {
         foreach(Transform child in gameObject.transform)
@@ -35,7 +37,8 @@ public class AIController : MonoBehaviour
             } 
         }    
     }
-
+    
+    //Create a number of enemies with given stats on any number of potential hexes
     public void instantiateEnemies(int numberOfEnemies, double enemyStatMultiplier, List<GameObject> availableHexes)
     {
         GameObject availableHex;
@@ -48,7 +51,8 @@ public class AIController : MonoBehaviour
             
         }
     }
-
+    
+    //Create a single enemy with given stats on a single hex
     public void instantiateEnemy(double enemyStatMultiplier, GameObject hex)
     {
         GameObject newEnemy;
