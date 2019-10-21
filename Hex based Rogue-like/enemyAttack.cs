@@ -22,17 +22,20 @@ public class enemyAttack : MonoBehaviour
     {
         
     }
-
+    
+    //Return if this enemy can attack
     public bool canAttackPlayer()
     {
         return canAttack;
     }
-
+    
+    //Called if enemy and player occupy the same hex
     public void attackCurrentHex()
     {
         StartCoroutine(attackCurrentPlayer());
     }
-
+    
+    //Coroutine to trigger attack, wait for attack to finish, and then deduct health based on damage done. 
     public IEnumerator attackCurrentPlayer()
     {
         gameObject.GetComponent<Animator>().SetTrigger("Attack");
@@ -44,7 +47,8 @@ public class enemyAttack : MonoBehaviour
         gameObject.GetComponent<enemyCharacter>().setHealth(gameObject.GetComponent<enemyCharacter>().getHealth() - player.GetComponent<playerCharacter>().getAttack());
         yield return null;
     }
-
+    
+    //Called to attack an enemy at range
     public void attack()
     {
         if(Vector3.Distance(gameObject.transform.position, player.transform.position) <= gameObject.GetComponent<enemyCharacter>().getRange())
@@ -53,7 +57,8 @@ public class enemyAttack : MonoBehaviour
         }
         StartCoroutine(nextTurn());
     }
-
+    
+    //Coroutine to start next turn when enemies are done attacking
     private IEnumerator nextTurn()
     {
         yield return new WaitForSeconds(0.2f);
@@ -70,6 +75,7 @@ public class enemyAttack : MonoBehaviour
         yield return null;
     }
 
+    //Coroutine to launch a ranged attack
     private IEnumerator launchAttack()
     {
         gameObject.GetComponent<Animator>().SetTrigger("Attack");
@@ -81,7 +87,8 @@ public class enemyAttack : MonoBehaviour
 
         float diffX = player.transform.position.x - projectile.transform.position.x;
         float diffY = player.transform.position.y - projectile.transform.position.y;
-
+        
+        //Need to fix so that it is dynamic. 
         if (diffX == 0 && diffY > 0)
         {
         }
