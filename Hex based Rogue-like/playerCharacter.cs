@@ -18,7 +18,8 @@ public class playerCharacter : MonoBehaviour
             setHealth(100);
             setAttack(25);
         }
-
+        
+        //Set range and health based on the selected class
         if (gameObject.GetComponent<Animator>().runtimeAnimatorController.name.Contains("Mage"))
             range = 1;
         else if (gameObject.GetComponent<Animator>().runtimeAnimatorController.name.Contains("Archer"))
@@ -37,32 +38,38 @@ public class playerCharacter : MonoBehaviour
             StartCoroutine(death());
         
     }
-
+    
+    //Return the currently occupied hex
     public GameObject getCurrentHex()
     {
         return currentHex;
     }
 
+    //Return the player's range
     public float getRange()
     {
         return range;
     }
-
+    
+    //Return the player's health
     public int getHealth()
     {
         return health;
     }
-
+    
+    //Return the player's attack
     public int getAttack()
     {
         return attack;
     }
-
+    
+    //Set the player's current hex
     public void setCurrentHex(GameObject currentHex)
     {
         this.currentHex = currentHex;
     }
-
+    
+    //Set the player's health
     public void setHealth(int health)
     {
         this.health = health;
@@ -79,7 +86,8 @@ public class playerCharacter : MonoBehaviour
             }
         }
     }
-
+    
+    //Set the player's attack
     public void setAttack(int attack)
     {
         this.attack = attack;
@@ -95,7 +103,8 @@ public class playerCharacter : MonoBehaviour
             }
         }
     }
-
+    
+    //Coroutine to start the player's death animation and return to title screen
     private IEnumerator death()
     {
         gameObject.GetComponent<Animator>().SetBool("Death", true);
