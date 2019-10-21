@@ -35,14 +35,16 @@ public class GameController : MonoBehaviour
         GameObject.Find("BoatImage").SetActive(false);
         GameObject.Find("WingImage").SetActive(false);
 
+        //Ensure a valid map with a path from start portal to end portal
         while (!currentMap.GetComponent<PlaceHexes>().searchForPath())
         {
             Destroy(currentMap);
             instantiateMap();
         }
 
+        //Get the player's selected class
         string playerClass = GameObject.Find("CharEmpty").GetComponent<CharEmpty_Script>().Char;
-
+        
         if(playerClass == "Swordsman")
             instantiatePlayer("Swordsman");
         else if (playerClass == "Archer")
@@ -56,6 +58,7 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
+        //When player reached the exit portal, destroy current level and create the next level
         if(currentPlayer.GetComponent<playerCharacter>().getCurrentHex() == currentMap.GetComponent<PlaceHexes>().getExitPortal())
         {
             Destroy(currentRuin);
@@ -73,7 +76,7 @@ public class GameController : MonoBehaviour
             }
 
             level++;
-            if (level % 5 == 0)
+            if (level % 5 == 0) //Enemies stats increase every 5th level
                 enemyStatMultiplier *= 1.5;
             instantiateEnemies(5 + (level - 1) % 5);
             instantiateRuins();
@@ -82,17 +85,21 @@ public class GameController : MonoBehaviour
             currentPlayer.GetComponent<playerAttack>().setAIManager(AIManager);
             currentPlayer.GetComponent<playerMovement>().newTurn();
             currentMap.GetComponent<PlaceHexes>().getEnterPortal().GetComponent<Hex>().setPlayerUnit(currentPlayer);
-        } else if(!enemyTurn && !currentPlayer.GetComponent<playerMovement>().canMove() && !currentPlayer.GetComponent<playerMovement>().getMoving() && !currentPlayer.GetComponent<playerAttack>().getCanAttackEnemy())
+        } 
+        //Check to see if the player's turn has ended
+        else if(!enemyTurn && !currentPlayer.GetComponent<playerMovement>().canMove() && !currentPlayer.GetComponent<playerMovement>().getMoving() && !currentPlayer.GetComponent<playerAttack>().getCanAttackEnemy())
         {
             enemyTurn = true;
             StartCoroutine(startEnemyTurn());
-        } else if (currentPlayer.GetComponent<playerMovement>().canMove())
+        } 
+        //Check to see if Enemy's turn has ended
+        else if (currentPlayer.GetComponent<playerMovement>().canMove())
         {
             enemyTurn = false;
         }
             
     }
-
+    //Coroutine to ensure that no projectiles exist before transitioning to the enemy's turn
     private IEnumerator startEnemyTurn()
     {
         yield return new WaitForSeconds(0.2f);
@@ -103,7 +110,8 @@ public class GameController : MonoBehaviour
         AIManager.GetComponent<AIController>().enemyTurn();
         yield return null;
     }
-
+    
+    //If an enemy died return true
     private bool enemyDeath()
     {
         foreach(Transform child in AIManager.transform)
@@ -113,124 +121,15 @@ public class GameController : MonoBehaviour
         }
         return false;
     }
-
-
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (currentPlayer == null)
-    //        return;
-
-
-    //    if (currentPlayer.GetComponent<Character>().getCurrentHex() != null)
-    //    {
-    //        if (currentPlayer.GetComponent<Character>().getCurrentHex().Equals(currentMap.GetComponent<PlaceHexes>().getExitPortal()))
-    //        {
-    //            level++;
-
-    //            foreach (Transform child in GameObject.Find("Canvas").transform)
-    //            {
-    //                if (child.gameObject.name == "LevelDisplay")
-    //                {
-    //                    foreach (Transform invChild in child)
-    //                    {
-    //                        if (invChild.gameObject.name.Contains("LevelText"))
-    //                            invChild.gameObject.GetComponent<Text>().text = level.ToString();
-    //                    }
-    //                }
-    //            }
-
-    //            if (level % 5 == 0)
-    //            {
-    //                enemyStatMultiplier *= 1.5f;
-    //            }
-    //            Destroy(currentMap);
-    //            Destroy(currentRuin);
-
-    //            instantiateMap();
-    //            currentPlayer.GetComponent<Rigidbody2D>().position = currentMap.GetComponent<PlaceHexes>().getEnterPortal().transform.position;
-    //            currentPlayer.GetComponent<Character>().setCurrentHex(currentMap.GetComponent<PlaceHexes>().getEnterPortal());
-    //            currentMap.GetComponent<PlaceHexes>().getEnterPortal().GetComponent<Hex>().setPlayerUnit(currentPlayer);
-    //            instantiateEnemies();
-    //            instantiateRuins();
-    //            numberSpawned = 0;
-    //            deathPhase = false;
-    //            enemyPhase = false;
-    //            currentPlayer.GetComponent<Character>().unlockPlayer();
-    //            currentPlayer.GetComponent<Attack>().setCanAttack();
-    //            preventEnemyMove = true;
-    //            StartCoroutine(preventEnemyMov());
-    //        }
-    //    }
-
-    //    if (!deathPhase && !enemyPhase)
-    //    {
-    //        try
-    //        {
-    //            foreach (GameObject enemy in currentEnemies)
-    //            {
-    //                if (enemy.GetComponent<Character>().getHealth() <= 0)
-    //                {
-    //                    StartCoroutine(enemyDeath(enemy));
-    //                    deathPhase = true;
-    //                }
-    //            }
-    //        }
-    //        catch { }
-    //    }
-
-
-    //    if (!preventEnemyMove)
-    //    {
-
-
-    //        if (currentPlayer.GetComponent<Character>().isLockPlayer() && (!currentPlayer.GetComponent<Attack>().getCanAttack() || !canAttackEnemy) && !enemyPhase)
-    //        {
-    //            enemyPhase = true;
-    //            currentPlayer.GetComponent<Attack>().canNotAttack();
-    //            StartCoroutine(deathPhaseOne());
-    //        }
-    //        if (currentRuin != null)
-    //        {
-    //            if (currentRuin.GetComponent<Ruins>().getHex().GetComponent<Hex>().getEnemyUnit() == null && numberSpawned < 4 && !enemyPhase)
-    //            {
-    //                if (Vector3.Distance(currentRuin.transform.position, currentPlayer.transform.position) < 3 && canSpawn)
-    //                {
-    //                    numberSpawned++;
-    //                    GameObject newEnemy = Instantiate(enemies[Random.Range(0, enemies.Count)], currentRuin.transform.position, Quaternion.identity);
-    //                    newEnemy.GetComponent<Character>().setCurrentHex(currentRuin.GetComponent<Ruins>().getHex());
-    //                    newEnemy.GetComponent<Character>().setHealth(Mathf.RoundToInt(50 * enemyStatMultiplier));
-    //                    newEnemy.GetComponent<Character>().setAttack(Mathf.RoundToInt(10 * enemyStatMultiplier));
-    //                    currentRuin.GetComponent<Ruins>().getHex().GetComponent<Hex>().setEnemyUnit(newEnemy);
-    //                    currentEnemies.Add(newEnemy);
-    //                    canSpawn = false;
-    //                }
-    //            }
-    //            if (currentPlayer.transform.position == currentRuin.transform.position)
-    //            {
-    //                currentRuin.GetComponent<Ruins>().dropItem();
-    //                Destroy(currentRuin);
-    //            }
-    //        }
-    //    }
-
-
-
-    //}
-
-
-
-
-
-
+    
+    //Create a new map
     private void instantiateMap()
     {
         currentMap = Instantiate(map, new Vector3(0, 0, 0), Quaternion.identity);
         currentMap.GetComponent<PlaceHexes>().setHexController(gameObject);
     }
 
-
-
+    //Create a new player
     public void instantiatePlayer(string playerClass)
     {
         if (playerClass == "Swordsman")
@@ -249,6 +148,7 @@ public class GameController : MonoBehaviour
         currentMap.GetComponent<PlaceHexes>().getEnterPortal().GetComponent<Hex>().setPlayerUnit(currentPlayer);
     }
 
+    //Create a new ruin
     public void instantiateRuins()
     {
         List<GameObject> potentialHexes = new List<GameObject>();
@@ -265,11 +165,10 @@ public class GameController : MonoBehaviour
         currentRuin.GetComponent<Ruins>().setPlayer(currentPlayer);
         currentRuin.GetComponent<Ruins>().setEnemyStatMultiplier(enemyStatMultiplier);
         currentRuin.GetComponent<Ruins>().setAIManager(AIManager);
+        //Because ruins instantiate enemies when the player is in a certain range, we need to set several variables
     }
-
-
-
-
+    
+    //Create new enemies
     private void instantiateEnemies(int numberOfEnemies)
     {
         List<GameObject> availableHexes = new List<GameObject>();
@@ -285,18 +184,16 @@ public class GameController : MonoBehaviour
         AIManager.GetComponent<AIController>().instantiateEnemies(numberOfEnemies, enemyStatMultiplier, availableHexes);
      }
 
-
+    //Allows other scripts to move the player
     public void movePlayer(GameObject destination)
     {
-
         if (currentPlayer.GetComponent<playerMovement>().canMove())
         {
             currentPlayer.GetComponent<playerMovement>().move(destination, 0.5f);
         }
-           
-
     }
 
+    //Allows other scripts to make the player attack
     public void attackEnemy(GameObject target)
     {
         if (currentPlayer.GetComponent<playerAttack>().getCanAttack())
@@ -304,86 +201,5 @@ public class GameController : MonoBehaviour
             currentPlayer.GetComponent<playerAttack>().attack(target);
         }
     }
-
-
-
-    //private bool enemiesInRange(GameObject hex)
-    //{
-    //    foreach(GameObject enemy in currentEnemies)
-    //    {
-    //        if (Vector3.Distance(hex.transform.position, enemy.transform.position) <= currentPlayer.GetComponent<Character>().getRange()*1.2)
-    //            return true;
-    //    }
-    //    return false;
-    //}
-
-
-    //IEnumerator enemyMovementPhase(float time)
-    //{
-    //    //yield return new WaitForSeconds(time);
-
-    //    List<GameObject> adjacentHexes;
-    //    List<GameObject> potentialHexes;
-    //    GameObject destination;
-    //    int moveRange = 3;
-    //    foreach (GameObject enemy in currentEnemies)
-    //    {
-    //        try
-    //        {
-    //            enemy.GetComponent<Character>().getCurrentHex();
-    //        }
-    //        catch { yield break; }
-    //        adjacentHexes = enemy.GetComponent<Character>().getCurrentHex().GetComponent<Hex>().getAdjacent();
-    //        potentialHexes = new List<GameObject>();
-    //        foreach (GameObject hex in adjacentHexes)
-    //        {
-    //            if (hex.GetComponent<Hex>().canMoveTo())
-    //            {
-    //                potentialHexes.Add(hex);
-    //            }
-    //        }
-
-    //        if (potentialHexes.Count != 0)
-    //        {
-    //            destination = potentialHexes[Random.Range(0, potentialHexes.Count)];
-    //            if (Vector3.Distance(enemy.transform.position, currentPlayer.transform.position) < moveRange)
-    //            {
-    //                foreach (GameObject hex in potentialHexes)
-    //                {
-    //                    if (enemy.GetComponent<SpriteRenderer>().sprite.name.Contains("Archer") && hex.GetComponent<Hex>().playerUnit != null)
-    //                        continue;
-    //                    if (Vector3.Distance(hex.transform.position, currentPlayer.transform.position) < Vector3.Distance(destination.transform.position, currentPlayer.transform.position))
-    //                        destination = hex;
-    //                }
-    //            }
-
-    //            enemy.GetComponent<Movement>().move(destination, time);
-    //        }
-    //        yield return new WaitForSeconds(time);
-    //    }
-    //    StartCoroutine(enemyAttackPhase(0.2f));
-    //    yield return null;
-    //}
-
-    //IEnumerator enemyAttackPhase(float time)
-    //{
-    //    foreach (GameObject enemy in currentEnemies)
-    //    {
-    //        if (Vector3.Distance(enemy.transform.position, currentPlayer.transform.position) <= enemy.GetComponent<Character>().getRange())
-    //        {
-    //            enemy.GetComponent<Character>().unlockPlayer();
-    //            enemy.GetComponent<Attack>().attackAtRange(currentPlayer.GetComponent<Character>().getCurrentHex());
-    //            yield return new WaitForSeconds(Vector3.Distance(enemy.transform.position, currentPlayer.transform.position));
-    //        }
-
-    //    }
-    //    StartCoroutine(deathPhaseTwo());
-    //    yield return null;
-    //}
-
-    //public GameObject getCurrentPlayer()
-    //{
-    //    return currentPlayer;
-    //}
 
 }
