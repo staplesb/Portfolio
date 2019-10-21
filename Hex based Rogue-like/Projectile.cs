@@ -20,6 +20,7 @@ public class Projectile : MonoBehaviour
        
     }
 
+    //When the projectile collides with another object, do damage to the object and/or destroy the projectile
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (player && collision.gameObject.tag == "Enemy")
@@ -33,6 +34,7 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    //When the projectile collides with a player, do damage to the player and destroy the projectile.
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(!player && collision.gameObject.tag == "Player")
@@ -42,12 +44,13 @@ public class Projectile : MonoBehaviour
         }
     }
 
-
+    //Set the damage of the projectile
     public void setDamage(int damage)
     {
         this.damage = damage;
     }
-
+    
+    //Set the player as the shooter.
     public void isPlayer()
     {
         player = true;
