@@ -21,7 +21,8 @@ public class playerMovement : MonoBehaviour
         if (!moving && gameObject.transform.position != gameObject.GetComponent<playerCharacter>().currentHex.transform.position && gameObject.GetComponent<playerCharacter>().currentHex.GetComponent<Hex>().getEnemyUnit() == null)
             gameObject.GetComponent<Rigidbody2D>().position = gameObject.GetComponent<playerCharacter>().currentHex.transform.position;
     }
-
+    
+    //Determine whether a player can move to a selected location, orient the player, and start the coroutine to move the player
     public void move(GameObject destination, float time)
     {
 
@@ -38,6 +39,7 @@ public class playerMovement : MonoBehaviour
         float diffX = destination.transform.position.x - gameObject.transform.position.x;
         float diffY = destination.transform.position.y - gameObject.transform.position.y;
 
+        //This should be made to be more dynamic. 
         if (diffX > 0 && diffY > 0)
         {
             gameObject.GetComponent<Rigidbody2D>().rotation = 60f;
@@ -63,7 +65,8 @@ public class playerMovement : MonoBehaviour
         {
             gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
-
+        
+        //Let the player move twice if the first hex he goes to is grasslands. Also use a different animation. 
         if (firstMove && destination.GetComponent<SpriteRenderer>().sprite.name.Contains("Grass"))
         {
             firstMove = false;
@@ -83,7 +86,8 @@ public class playerMovement : MonoBehaviour
         }
         StartCoroutine(moveToDestination(destination, time));
     }
-
+    
+    //Coroutine to move the player to a destination hex over a given amount of time. 
     IEnumerator moveToDestination(GameObject destination, float time)
     {
         float lerpTime = 0.0f;
@@ -122,24 +126,28 @@ public class playerMovement : MonoBehaviour
         moving = false;
         yield return null;
     }
-
+    
+    //Reset for a new turn
     public void newTurn()
     {
         firstMove = true;
     }
-
+    
+    //Return true if the player can move
     public bool canMove()
     {
         if (firstMove || secondMove)
             return true;
         return false;
     }
-
+    
+    //Return ture if the player is moving
     public bool getMoving()
     {
         return moving;
     }
-
+    
+    //If the player collides with an item, pick it up and give the plater the desired stats
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Item" && gameObject.tag != "Enemy")
@@ -154,7 +162,6 @@ public class playerMovement : MonoBehaviour
             }
             else
             {
-                //gameObject.GetComponent<Character>().addItem(collision.gameObject);
                 collision.transform.SetParent(gameObject.transform);
                 collision.transform.localPosition = Vector3.zero;
                 collision.transform.localRotation = Quaternion.identity;
