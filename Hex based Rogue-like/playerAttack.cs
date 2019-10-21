@@ -25,11 +25,13 @@ public class playerAttack : MonoBehaviour
         
     }
 
+    //Set the AI controller
     public void setAIManager(GameObject AIManager)
     {
         this.AIManager = AIManager;
     }
 
+    //Return true if enemies are in range of the player's attack
     private bool enemiesInRange()
     {
         foreach(Transform child in AIManager.transform)
@@ -39,28 +41,33 @@ public class playerAttack : MonoBehaviour
         }
         return false;
     }
-
+    
+    //Return true if the player can attack an enemy
     public bool getCanAttackEnemy()
     {
         return attacking || (canAttack && enemiesInRange());
     }
-
+    
+    //Return true if the player is able to attack
     public bool getCanAttack()
     {
         return canAttack;
     }
-
+    
+    //Start a new turn
     public void newTurn()
     {
         canAttack = true;
     }
-
+    
+    //Attack the hex the player is occupying
     public void attackCurrentHex()
     {
         attacking = true;
         StartCoroutine(attackCurrentEnemy());
     }
-
+    
+    //Coroutine to attack an enemy on the same hex as the player, and deduct health once the animation completes. 
     public IEnumerator attackCurrentEnemy()
     {
         gameObject.GetComponent<Animator>().SetTrigger("Attack");
@@ -83,7 +90,8 @@ public class playerAttack : MonoBehaviour
         attacking = false;
         yield return null;
     }
-
+    
+    //Attack an enemy at range
     public void attack(GameObject target)
     {
         if (Vector3.Distance(gameObject.transform.position, target.transform.position) <= gameObject.GetComponent<playerCharacter>().getRange())
@@ -93,18 +101,20 @@ public class playerAttack : MonoBehaviour
         }
     }
 
-
+    //Coroutine to launch a projectile at the target hex
     private IEnumerator launchAttack(GameObject target)
     {
         gameObject.GetComponent<Animator>().SetTrigger("Attack");
         yield return new WaitForSeconds(0.1f);
         GameObject projectile;
-
+        
+        //Projectile is an arrow
         if (gameObject.GetComponent<Animator>().runtimeAnimatorController.name.Contains("Archer"))
         {
             projectile = Instantiate(projectilePrefabs[0], gameObject.transform.position, Quaternion.identity);
             projectile.GetComponent<Projectile>().setDamage(gameObject.GetComponent<playerCharacter>().getAttack());
         }
+        //Projectile is a fire ball
         else
         {
             print(gameObject.GetComponent<Animator>().name);
@@ -117,7 +127,8 @@ public class playerAttack : MonoBehaviour
 
         float diffX = target.transform.position.x - projectile.transform.position.x;
         float diffY = target.transform.position.y - projectile.transform.position.y;
-
+        
+        //Sets direction of projectile. Needs to be reworked to be more dynamic.
         if (diffX == 0 && diffY > 0)
         {
         }
