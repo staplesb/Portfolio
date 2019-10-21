@@ -33,32 +33,37 @@ public class enemyCharacter : MonoBehaviour
 
     }
 
-
+    //Return this enemy's current hex
     public GameObject getCurrentHex()
     {
         return currentHex;
     }
-
+    
+    //Return this enemy's range
     public float getRange()
     {
         return range;
     }
-
+    
+    //Return this enemy's health
     public int getHealth()
     {
         return health;
     }
-
+    
+    //Return this enemy's attack
     public int getAttack()
     {
         return attack;
     }
-
+    
+    //Set this enemy's current hex
     public void setCurrentHex(GameObject currentHex)
     {
         this.currentHex = currentHex;
     }
-
+    
+    //Set this enemy's health
     public void setHealth(int health)
     {
         this.health = health;
@@ -75,7 +80,8 @@ public class enemyCharacter : MonoBehaviour
             }
         }
     }
-
+    
+    //Set this enemy's attack
     public void setAttack(int attack)
     {
         this.attack = attack;
@@ -92,7 +98,8 @@ public class enemyCharacter : MonoBehaviour
         }
 
     }
-
+    
+    //Coroutine to start death animation and drop item on enemy's death
     private IEnumerator death()
     {
         gameObject.GetComponent<Animator>().SetBool("Death", true);
